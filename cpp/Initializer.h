@@ -5,6 +5,7 @@
 #include <QSharedMemory>
 
 #include "cpp/Personalization.h"
+#include "cpp/Database.h"
 
 #define UNIQUE_KEY_PREVENT_DOUBLE_RUN "FilesOnSchedule2-IsRunning-mt9n8MSxmKiEUZo"
 
@@ -55,7 +56,7 @@ signals:
 
 private:
     Personalization *m_personalization;
-    // Database *m_database;
+    Database *m_database;
 };
 
 #endif // INITIALIZER_H

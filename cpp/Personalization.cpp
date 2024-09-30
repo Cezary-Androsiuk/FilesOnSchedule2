@@ -25,7 +25,7 @@ void Personalization::addError(const QString &error)
     m_errors += error;
 }
 
-Personalization *const Personalization::getInstance()
+Personalization *const Personalization::getInstance() noexcept
 {
     static Personalization p;
     return &p;

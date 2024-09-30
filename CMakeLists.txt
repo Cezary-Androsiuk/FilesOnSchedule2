@@ -4,7 +4,7 @@ project(FilesOnSchedule2 VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 6.4 REQUIRED COMPONENTS Quick)
+find_package(Qt6 6.4 REQUIRED COMPONENTS Quick Sql)
 
 qt_standard_project_setup()
 
@@ -23,6 +23,10 @@ qt_add_qml_module(appFilesOnSchedule2
         SOURCES cpp/Log.h cpp/Log.cpp
         SOURCES cpp/Initializer.h cpp/Initializer.cpp
         SOURCES cpp/Database.h cpp/Database.cpp
+        QML_FILES qml/MainWindow.qml
+        QML_FILES qml/Error1Window.qml
+        QML_FILES qml/Error2Window.qml
+        QML_FILES qml/Error3Window.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -37,7 +41,7 @@ set_target_properties(appFilesOnSchedule2 PROPERTIES
 )
 
 target_link_libraries(appFilesOnSchedule2
-    PRIVATE Qt6::Quick
+    PRIVATE Qt6::Quick Qt6::Sql
 )
 
 include(GNUInstallDirs)

@@ -4,6 +4,7 @@ Initializer::Initializer(QObject *parent)
     : QObject{parent}
 {
     m_personalization = Personalization::getInstance();
+    m_database = Database::getInstance();
     this->createConnections();
 }
 
@@ -17,8 +18,8 @@ void Initializer::createConnections() noexcept
     QObject::connect(this, &Initializer::personalizationInitialized, this, &Initializer::initializeDatabase);
 
     /// init 3
-    // QObject::connect(m_database, &Database::initialized, this, &Initializer::databaseInitialized);
-    // QObject::connect(m_database, &Database::initializeFailed, this, &Initializer::databaseInitializeFailed);
+    QObject::connect(m_database, &Database::initialized, this, &Initializer::databaseInitialized);
+    QObject::connect(m_database, &Database::initializeFailed, this, &Initializer::databaseInitializeFailed);
 
     /// init 3 -> end
     QObject::connect(this, &Initializer::databaseInitialized, this, &Initializer::initialized);
@@ -53,7 +54,7 @@ void Initializer::initializePersonalization() noexcept
 void Initializer::initializeDatabase() noexcept
 {
     D("Initializing database")
-    // m_database->initialize();
+    m_database->initialize();
 }
 
 bool Initializer::testIfApplicationAlreadyRunning() noexcept

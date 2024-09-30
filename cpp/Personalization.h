@@ -46,7 +46,7 @@ private:
     void addError(const QString &error);
 
 public:
-    static Personalization *const getInstance();
+    static Personalization *const getInstance() noexcept;
 
     void setDefault();
     void load();
