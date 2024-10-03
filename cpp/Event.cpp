@@ -30,16 +30,16 @@ void Event::setPath(cQString path)
     emit this->pathChanged();
 }
 
-void Event::setFromDate(size_t fromDate)
+void Event::setBeginTime(size_t beginTime)
 {
-    m_fromDate = fromDate;
-    emit this->fromDateChanged();
+    m_beginTime = beginTime;
+    emit this->beginTimeChanged();
 }
 
-void Event::setToDate(size_t toDate)
+void Event::setEndTime(size_t endTime)
 {
-    m_toDate = toDate;
-    emit this->toDateChanged();
+    m_endTime = endTime;
+    emit this->endTimeChanged();
 }
 
 
@@ -63,14 +63,14 @@ cQString Event::getPath() const
     return m_path;
 }
 
-size_t Event::getFromDate() const
+size_t Event::getBeginTime() const
 {
-    return m_fromDate;
+    return m_beginTime;
 }
 
-size_t Event::getToDate() const
+size_t Event::getEndTime() const
 {
-    return m_toDate;
+    return m_endTime;
 }
 
 Event::PathType Event::getPathType() const

@@ -4,10 +4,10 @@ Database::Database(QObject *parent)
     : QObject{parent}
     , m_oppened(false)
 {
-
 #if DELETE_DB_AT_START
     D("removed database file at start with status: " + BOOL_TO_STR(QFile::remove(DATABASE_FILE)));
 #endif
+    QObject::connect(WeekEvents::getInstance(), &WeekEvents::currentWeekChanged, this, &Database::readWeekEvents);
 }
 
 Database::~Database()
@@ -36,6 +36,8 @@ void Database::initialize()
         emit this->initializeFailed();
         return;
     }
+
+    this->readWeekEvents();
 
     emit this->initialized();
 }
@@ -130,10 +132,10 @@ bool Database::createTableEvents()
         "title          TEXT        NOT NULL,"
         "description    TEXT        NOT NULL,"
         "path           TEXT        NOT NULL,"
-        "from_date      INTEGER     NOT NULL,"
-        "to_date        INTEGER     NOT NULL,"
+        "begin_time      INTEGER     NOT NULL,"
+        "end_time        INTEGER     NOT NULL,"
 
-        "CHECK (from_date < to_date) )";
+        "CHECK (begin_time < end_time) )";
 
     if(!query.exec(queryText))
     {
@@ -178,12 +180,12 @@ bool Database::tableEventsExist() const
     return foundEventsTable;
 }
 
-void Database::createExampleEventsData()
+void Database::createExampleEventsData() const
 {
     QSqlDatabase db = QSqlDatabase::database( MAIN_DB_CONNECTION );
     QSqlQuery query(db);
 
-    const QString queriesPrefix("INSERT INTO events (title, description, path, from_date, to_date) VALUES ");
+    const QString queriesPrefix("INSERT INTO events (title, description, path, begin_time, end_time) VALUES ");
     QStringList queriesValues = {
         "('my title', 'desc', 'some path', 12, 14)",
         "('my title2', 'desc2', 'some path2', 16, 18)",
@@ -198,5 +200,32 @@ void Database::createExampleEventsData()
     }
 
     I("Example events data was created");
+}
+
+void Database::readEventsFromRange(qint64 begin, qint64 end, EventsList &list) const
+{
+    QSqlDatabase db = QSqlDatabase::database( MAIN_DB_CONNECTION );
+    QSqlQuery query(db);
+    if(!query.exec("SELECT * FROM events WHERE "))
+    {
+
+    }
+}
+
+void Database::readWeekEvents()
+{
+    WeekEvents *const weekEvents = WeekEvents::getInstance();
+
+    for(int i=0; i<7; i++)
+    {
+        QDate date = weekEvents->getWeekDate(i);
+        qint64 begin = date.startOfDay().toSecsSinceEpoch();
+        qint64 end = date.endOfDay().toSecsSinceEpoch();
+
+        EventsList list;
+        this->readEventsFromRange(begin, end, list);
+    }
+
+
 }
 

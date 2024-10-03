@@ -9,6 +9,7 @@
 #include <QFile>
 
 #include "cpp/Log.h"
+#include "cpp/WeekEvents.h"
 
 #define BOOL_TO_STR(x) ( (x) ? QString("true") : QString("false") )
 
@@ -42,10 +43,11 @@ private:
     bool resetDB();
     bool createTableEvents();
     bool tableEventsExist() const;
-    void createExampleEventsData();
+    void createExampleEventsData() const;
+    void readEventsFromRange(qint64 begin, qint64 end, EventsList &list) const;
 
 private slots:
-    // void readWeekEvents(); // ? do it somehow
+    void readWeekEvents(); // ? do it somehow
 
 signals:
     void initialized();

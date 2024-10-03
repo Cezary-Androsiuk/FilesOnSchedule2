@@ -15,8 +15,8 @@ class Event : public QObject
     Q_PROPERTY(const QString &title       READ getTitle       NOTIFY titleChanged         FINAL)
     Q_PROPERTY(const QString &description READ getDescription NOTIFY descriptionChanged   FINAL)
     Q_PROPERTY(const QString &path        READ getPath        NOTIFY pathChanged          FINAL)
-    Q_PROPERTY(size_t fromDate      READ getFromDate    NOTIFY fromDateChanged      FINAL)
-    Q_PROPERTY(size_t toDate        READ getToDate      NOTIFY toDateChanged        FINAL)
+    Q_PROPERTY(size_t beginTime     READ getBeginTime   NOTIFY beginTimeChanged     FINAL)
+    Q_PROPERTY(size_t endTime       READ getEndTime     NOTIFY endTimeChanged       FINAL)
     Q_PROPERTY(size_t pathType      READ getPathType    NOTIFY pathTypeChanged      FINAL)
 
 public:
@@ -33,15 +33,15 @@ public:
     void setTitle(cQString title);
     void setDescription(cQString description);
     void setPath(cQString path);
-    void setFromDate(size_t fromDate);
-    void setToDate(size_t toDate);
+    void setBeginTime(size_t beginTime);
+    void setEndTime(size_t endTime);
 
     size_t getID() const;
     cQString getTitle() const;
     cQString getDescription() const;
     cQString getPath() const;
-    size_t getFromDate() const;
-    size_t getToDate() const;
+    size_t getBeginTime() const;
+    size_t getEndTime() const;
 
     PathType getPathType() const;
 
@@ -50,8 +50,8 @@ signals:
     void titleChanged();
     void descriptionChanged();
     void pathChanged();
-    void fromDateChanged();
-    void toDateChanged();
+    void beginTimeChanged();
+    void endTimeChanged();
 
     void pathTypeChanged();
 
@@ -63,8 +63,8 @@ private:
     QString m_title;
     QString m_description;
     QString m_path;
-    size_t m_fromDate;
-    size_t m_toDate;
+    size_t m_beginTime;
+    size_t m_endTime;
 
     PathType m_pathType;
 };
