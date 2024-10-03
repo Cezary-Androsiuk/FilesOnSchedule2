@@ -5,12 +5,17 @@
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlQuery>
 #include <QtSql/QSqlError>
+#include <QtSql/QSqlRecord>
 #include <QFile>
 
 #include "cpp/Log.h"
 
+#define BOOL_TO_STR(x) ( (x) ? QString("true") : QString("false") )
+
 #define MAIN_DB_CONNECTION "MainDatabaseConnection"
 #define DATABASE_FILE "FilesOnSchedule2.db"
+#define DELETE_DB_AT_START true
+#define ADD_EXAMPLE_DATA_TO_TABLE true
 
 class Database : public QObject
 {
@@ -35,6 +40,12 @@ private:
     bool openDB();
     void closeDB();
     bool resetDB();
+    bool createTableEvents();
+    bool tableEventsExist() const;
+    void createExampleEventsData();
+
+private slots:
+    // void readWeekEvents(); // ? do it somehow
 
 signals:
     void initialized();

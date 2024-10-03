@@ -39,7 +39,7 @@ void Personalization::setDefault()
 
 void Personalization::load()
 {
-    I("loading personalization");
+    // I("loading personalization");
 
     if(!QFile(JSON_FILE).exists()){
         MARK_ERROR("file " JSON_FILE " not found");
@@ -91,7 +91,7 @@ void Personalization::load()
 
 void Personalization::save()
 {
-    I("save personalization starting");
+    // I("save personalization starting");
 
     QJsonObject jsonObject;
     jsonObject[KEY_NOTE] = QString(DEFAULT_NOTE);

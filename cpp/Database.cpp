@@ -5,6 +5,9 @@ Database::Database(QObject *parent)
     , m_oppened(false)
 {
 
+#if DELETE_DB_AT_START
+    D("removed database file at start with status: " + BOOL_TO_STR(QFile::remove(DATABASE_FILE)));
+#endif
 }
 
 Database::~Database()
@@ -27,6 +30,13 @@ void Database::initialize()
         return;
     }
 
+    if(!this->createTableEvents())
+    {
+        E("Unable to open create table");
+        emit this->initializeFailed();
+        return;
+    }
+
     emit this->initialized();
 }
 
@@ -37,7 +47,7 @@ const QString &Database::getLastError() const
 
 bool Database::openDB()
 {
-    if(!m_oppened)
+    if(m_oppened)
     {
         W("Database already oppened!")
         m_lastError = "Database already oppened!";
@@ -49,7 +59,6 @@ bool Database::openDB()
 
     if(!db.open())
     {
-        m_oppened = false;
         E("Failed while oppening database: " + db.lastError().text())
         m_lastError = "Failed while oppening database: " + db.lastError().text();
         return false;
@@ -102,5 +111,92 @@ bool Database::resetDB()
     }
 
     return dbWasOpen ? this->openDB() : true;
+}
+
+bool Database::createTableEvents()
+{
+    QSqlDatabase db = QSqlDatabase::database( MAIN_DB_CONNECTION );
+    QSqlQuery query(db);
+
+    if(this->tableEventsExist())
+    {
+        I("Table 'events' already exist");
+        return true;
+    }
+
+    QString queryText =
+        "CREATE TABLE IF NOT EXISTS events("
+        "id             INTEGER     PRIMARY KEY,"
+        "title          TEXT        NOT NULL,"
+        "description    TEXT        NOT NULL,"
+        "path           TEXT        NOT NULL,"
+        "from_date      INTEGER     NOT NULL,"
+        "to_date        INTEGER     NOT NULL,"
+
+        "CHECK (from_date < to_date) )";
+
+    if(!query.exec(queryText))
+    {
+        QString text = "Creating 'events' failed: " + query.lastError().text();
+        W(text)
+        m_lastError = text;
+        return false;
+    }
+
+#if ADD_EXAMPLE_DATA_TO_TABLE
+    this->createExampleEventsData();
+#endif
+
+    return true;
+}
+
+bool Database::tableEventsExist() const
+{
+    QSqlDatabase db = QSqlDatabase::database( MAIN_DB_CONNECTION );
+    QSqlQuery query(db);
+
+    if(!query.exec("SELECT name FROM sqlite_master"))
+    {
+        W("Unable to read sqlite_master");
+        return false;
+    }
+
+    bool foundEventsTable = false;
+    while(query.next())
+    {
+        QSqlRecord record = query.record();
+        QString tableName = record.value(0).toString();
+        /// record.value("name").toString(); is also usefull, but digit is a faster way
+
+        if(tableName.toLower() == "events")
+        {
+            foundEventsTable = true;
+            break;
+        }
+    }
+
+    return foundEventsTable;
+}
+
+void Database::createExampleEventsData()
+{
+    QSqlDatabase db = QSqlDatabase::database( MAIN_DB_CONNECTION );
+    QSqlQuery query(db);
+
+    const QString queriesPrefix("INSERT INTO events (title, description, path, from_date, to_date) VALUES ");
+    QStringList queriesValues = {
+        "('my title', 'desc', 'some path', 12, 14)",
+        "('my title2', 'desc2', 'some path2', 16, 18)",
+        "('my title3', 'desc3', 'some path3', 19, 21)",
+    };
+
+    for(const auto &queryValues : queriesValues)
+    {
+        if(!query.exec(queriesPrefix + queryValues))
+            W("failed while executing query: " + queryValues);
+
+    }
+
+    I("Example events data was created");
 }
 

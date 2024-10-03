@@ -2,7 +2,10 @@
 #include <QQmlApplicationEngine>
 
 #include <QQmlContext>
+#include <QUrl>
+
 #include "cpp/Initializer.h"
+#include "cpp/WeekEvents.h"
 
 int main(int argc, char *argv[])
 {
@@ -15,6 +18,8 @@ int main(int argc, char *argv[])
 #else
     engine.rootContext()->setContextProperty("isDebugMode", false);
 #endif
+
+    engine.rootContext()->setContextProperty("WeekEvents", WeekEvents::getInstance());
     engine.rootContext()->setContextProperty("Initializer", Initializer::getInstance());
 
     const QUrl url(QStringLiteral("qrc:/FilesOnSchedule2/qml/Main.qml"));
