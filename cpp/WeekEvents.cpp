@@ -7,6 +7,14 @@ WeekEvents::WeekEvents(QObject *parent)
 
     qint64 tmpJulianDay = now.toJulianDay() - now.dayOfWeek() + 1;
     m_currentWeek = QDate::fromJulianDay(tmpJulianDay);
+
+    m_events[Qt::DayOfWeek::Monday] = EventsList();
+    m_events[Qt::DayOfWeek::Tuesday] = EventsList();
+    m_events[Qt::DayOfWeek::Wednesday] = EventsList();
+    m_events[Qt::DayOfWeek::Thursday] = EventsList();
+    m_events[Qt::DayOfWeek::Friday] = EventsList();
+    m_events[Qt::DayOfWeek::Saturday] = EventsList();
+    m_events[Qt::DayOfWeek::Sunday] = EventsList();
 }
 
 WeekEvents::~WeekEvents()
@@ -23,6 +31,7 @@ WeekEvents * const WeekEvents::getInstance() noexcept
 void WeekEvents::setEventsForDay(Qt::DayOfWeek day, EventsList list)
 {
     m_events[day] = list;
+    emit this->eventsChanged();
 }
 
 QDate WeekEvents::getWeekDate(qint64 dayOffset) const
@@ -36,6 +45,11 @@ QDate WeekEvents::getWeekDate(qint64 dayOffset) const
 QString WeekEvents::getCurrentWeek() const
 {
     return m_currentWeek.toString("d M yyyy") + " - " + this->getWeekDate(6).toString("d M yyyy");
+}
+
+const EventsMap &WeekEvents::getEvents() const
+{
+    return m_events;
 }
 
 void WeekEvents::nextWeek()

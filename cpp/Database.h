@@ -45,13 +45,16 @@ private:
     bool tableEventsExist() const;
     void createExampleEventsData() const;
     void readEventsFromRange(qint64 begin, qint64 end, EventsList &list) const;
+    static QString validatePath(const QString &path);
 
 private slots:
-    void readWeekEvents(); // ? do it somehow
+    void readWeekEvents();
 
 signals:
     void initialized();
     void initializeFailed();
+
+    void contentOfDatabaseChanged();
 
 private:
     bool m_oppened;

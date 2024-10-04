@@ -21,6 +21,9 @@ class Event : public QObject
 
 public:
     explicit Event(QObject *parent = nullptr);
+    Event(const Event& other);
+    Event(const Event&& other);
+    Event &operator =(const Event& other);
 
     enum PathType{
         NotExist = 0,
@@ -28,6 +31,8 @@ public:
         File
     };
     Q_ENUM(PathType)
+
+    void print() const;
 
     void setID(size_t id);
     void setTitle(cQString title);

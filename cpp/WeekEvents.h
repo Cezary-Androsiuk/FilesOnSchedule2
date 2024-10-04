@@ -11,11 +11,13 @@
 #include "cpp/Event.h"
 
 typedef QList<Event> EventsList;
+typedef QMap<Qt::DayOfWeek, EventsList> EventsMap;
 
 class WeekEvents : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString currentWeek READ getCurrentWeek NOTIFY currentWeekChanged FINAL)
+    Q_PROPERTY(EventsMap events READ getEvents NOTIFY eventsChanged FINAL)
 
 private:
     explicit WeekEvents(QObject *parent = nullptr);
@@ -32,6 +34,7 @@ public:
 
     Q_INVOKABLE QDate getWeekDate(qint64 dayOffset = 0) const;
     QString getCurrentWeek() const;
+    const EventsMap &getEvents() const;
 
 public slots:
     void nextWeek();
@@ -39,9 +42,10 @@ public slots:
 
 signals:
     void currentWeekChanged();
+    void eventsChanged();
 
 private:
-    QMap<Qt::DayOfWeek, EventsList > m_events;
+    EventsMap m_events;
     QDate m_currentWeek;
 };
 

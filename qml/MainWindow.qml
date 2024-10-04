@@ -9,6 +9,7 @@ ApplicationWindow {
     title: qsTr("File on Schedule 2")
 
     Rectangle{
+        id: header
         anchors{
             top: parent.top
             right: parent.right
@@ -56,6 +57,24 @@ ApplicationWindow {
                 WeekEvents.nextWeek();
             }
         }
+    }
+
+    ListView{
+        id: listView
+        anchors{
+            top: header.bottom
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+        }
+        orientation: Qt.Horizontal
+        model: 7
+        delegate: Rectangle{
+            color: Qt.rgba(1.0/(index+1),1.0/(index+1),1.0/(index+1),1.0)
+            height: listView.height
+            width: mainWindow.width/7
+        }
 
     }
+
 }

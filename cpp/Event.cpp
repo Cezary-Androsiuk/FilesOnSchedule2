@@ -6,6 +6,66 @@ Event::Event(QObject *parent)
     QObject::connect(this, &Event::pathChanged, this, &Event::checkWhatIsPathType);
 }
 
+Event::Event(const Event &other)
+{
+    m_id = other.m_id;
+    m_title = other.m_title;
+    m_description = other.m_description;
+    m_path = other.m_path;
+    m_beginTime = other.m_beginTime;
+    m_endTime = other.m_endTime;
+
+    m_pathType = other.m_pathType;
+}
+
+Event::Event(const Event &&other)
+{
+    m_id = other.m_id;
+    m_title = other.m_title;
+    m_description = other.m_description;
+    m_path = other.m_path;
+    m_beginTime = other.m_beginTime;
+    m_endTime = other.m_endTime;
+
+    m_pathType = other.m_pathType;
+}
+
+Event &Event::operator =(const Event &other)
+{
+    m_id = other.m_id;
+    m_title = other.m_title;
+    m_description = other.m_description;
+    m_path = other.m_path;
+    m_beginTime = other.m_beginTime;
+    m_endTime = other.m_endTime;
+
+    m_pathType = other.m_pathType;
+    return *this;
+}
+
+void Event::print() const
+{
+    printf("Event {\n");
+    printf("\tm_id = %llu \n", m_id);
+    printf("\tm_title = %s \n", m_title.toStdString().c_str());
+    printf("\tm_description = %s \n", m_description.toStdString().c_str());
+    printf("\tm_path = %s \n", m_path.toStdString().c_str());
+    printf("\tm_beginTime = %llu \n", m_beginTime);
+    printf("\tm_endTime = %llu \n", m_endTime);
+    switch (m_pathType) {
+    case NotExist:
+        printf("\tm_pathType = NotExist \n");
+        break;
+    case File:
+        printf("\tm_pathType = File \n");
+        break;
+    case Directory:
+        printf("\tm_pathType = Directory \n");
+        break;
+    }
+    printf("}\n");
+}
+
 void Event::setID(size_t id)
 {
     m_id = id;

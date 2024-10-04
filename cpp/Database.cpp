@@ -8,6 +8,7 @@ Database::Database(QObject *parent)
     D("removed database file at start with status: " + BOOL_TO_STR(QFile::remove(DATABASE_FILE)));
 #endif
     QObject::connect(WeekEvents::getInstance(), &WeekEvents::currentWeekChanged, this, &Database::readWeekEvents);
+    QObject::connect(this, &Database::contentOfDatabaseChanged, this, &Database::readWeekEvents);
 }
 
 Database::~Database()
@@ -206,10 +207,35 @@ void Database::readEventsFromRange(qint64 begin, qint64 end, EventsList &list) c
 {
     QSqlDatabase db = QSqlDatabase::database( MAIN_DB_CONNECTION );
     QSqlQuery query(db);
-    if(!query.exec("SELECT * FROM events WHERE "))
+    if(!query.exec( "SELECT * FROM events WHERE begin_time >= " + QString::number(begin) + " AND end_time <= " + QString::number(end) ))
     {
-
+        W("Unable to execute SELECT query for events: " + query.lastError().text());
+        return;
     }
+
+    int i=0;
+    while(query.next())
+    {
+        QSqlRecord r = query.record();
+        Event e;
+        e.setID( r.value("id").toULongLong() );
+        e.setTitle( r.value("title").toString() );
+        e.setDescription( Database::validatePath(r.value("path").toString()) );
+        e.setBeginTime( r.value("begin_time").toULongLong() );
+        e.setEndTime( r.value("end_time").toULongLong() );
+        // D("found " + QString::number(++i) + " value:")
+        e.print();
+        list.append(e);
+    }
+}
+
+QString Database::validatePath(const QString &path)
+{
+    if(path.startsWith("file:///"))
+        return path.last(path.size() - 8);
+    else
+        return path;
+
 }
 
 void Database::readWeekEvents()
@@ -224,6 +250,7 @@ void Database::readWeekEvents()
 
         EventsList list;
         this->readEventsFromRange(begin, end, list);
+        weekEvents->setEventsForDay(static_cast<Qt::DayOfWeek>(i+1), list);
     }
 
 
