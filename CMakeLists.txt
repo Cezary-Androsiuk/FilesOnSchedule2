@@ -44,6 +44,10 @@ qt_add_qml_module(appFilesOnSchedule2
         RESOURCES icons/plus_math_filled.svg
         RESOURCES icons/settings.svg
         RESOURCES icons/settings_filled.svg
+        RESOURCES icons/file.svg
+        RESOURCES icons/file_filled.svg
+        RESOURCES icons/opened_folder.svg
+        RESOURCES icons/opened_folder_filled.svg
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

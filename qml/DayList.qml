@@ -31,6 +31,13 @@ Item {
                 anchors.centerIn: parent
                 text: day + "-" + index
             }
+
+            MouseArea{
+                anchors.fill: parent
+                onClicked:{
+                    mainStackView.push(Qt.resolvedUrl("AddEvent.qml"), {"titleValue": "1234"})
+                }
+            }
         }
     }
 }

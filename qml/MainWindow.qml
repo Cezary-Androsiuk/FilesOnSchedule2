@@ -11,6 +11,9 @@ ApplicationWindow {
     visibility: Window.Maximized // probably do not affect on application right now (requires .showMaximized())
     title: qsTr("File on Schedule 2")
 
+    Material.theme: Material.Dark
+    Material.accent: Material.Red
+
     StackView{
         id: mainStackView
         anchors.fill: parent
@@ -21,7 +24,7 @@ ApplicationWindow {
                 property: "opacity"
                 from: 0
                 to:1
-                duration: 200
+                duration: 0
             }
         }
         pushExit: Transition {
@@ -29,7 +32,7 @@ ApplicationWindow {
                 property: "opacity"
                 from: 1
                 to: 1
-                duration: 200
+                duration: 0
             }
         }
         popEnter: Transition {
@@ -37,7 +40,7 @@ ApplicationWindow {
                 property: "opacity"
                 from: 1
                 to: 1
-                duration: 200
+                duration: 0
             }
         }
         popExit: Transition {
@@ -45,7 +48,7 @@ ApplicationWindow {
                 property: "opacity"
                 from: 1
                 to:0
-                duration: 200
+                duration: 0
             }
         }
     }

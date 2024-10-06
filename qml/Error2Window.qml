@@ -8,4 +8,7 @@ ApplicationWindow {
     visible: true
     title: qsTr("Error 2 Window")
     color: "green"
+
+    Material.theme: Material.Dark
+    Material.accent: Material.Red
 }
