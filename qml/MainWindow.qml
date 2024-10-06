@@ -3,78 +3,50 @@ import QtQuick.Controls.Material
 
 ApplicationWindow {
     id: mainWindow
-    width: 640
-    height: 480
+    width: 1280
+    minimumWidth: 400
+    height: 720
+    minimumHeight: 160
     visible: true
+    visibility: Window.Maximized // probably do not affect on application right now (requires .showMaximized())
     title: qsTr("File on Schedule 2")
 
-    Rectangle{
-        id: header
-        anchors{
-            top: parent.top
-            right: parent.right
-            left: parent.left
-        }
-        height: parent.height * 0.15
+    StackView{
+        id: mainStackView
+        anchors.fill: parent
 
-        color: "red"
-
-        Button{
-            anchors{
-                top: parent.top
-                left: parent.left
-                bottom: parent.bottom
-                right: text_.left
-            }
-            text: "<-"
-
-            onClicked: {
-                WeekEvents.prevWeek();
+        initialItem: MainContent{}
+        pushEnter: Transition {
+            PropertyAnimation {
+                property: "opacity"
+                from: 0
+                to:1
+                duration: 200
             }
         }
-
-        Text{
-            id: text_
-            anchors{
-                top: parent.top
-                bottom: parent.bottom
-                horizontalCenter: parent.horizontalCenter
+        pushExit: Transition {
+            PropertyAnimation {
+                property: "opacity"
+                from: 1
+                to: 1
+                duration: 200
             }
-            width: parent.width * 0.7
-            text: WeekEvents.currentWeek
         }
-
-
-        Button{
-            anchors{
-                top: parent.top
-                right: parent.right
-                bottom: parent.bottom
-                left: text_.right
+        popEnter: Transition {
+            PropertyAnimation {
+                property: "opacity"
+                from: 1
+                to: 1
+                duration: 200
             }
-            text: "->"
-            onClicked: {
-                WeekEvents.nextWeek();
+        }
+        popExit: Transition {
+            PropertyAnimation {
+                property: "opacity"
+                from: 1
+                to:0
+                duration: 200
             }
         }
     }
-
-    ListView{
-        id: listView
-        anchors{
-            top: header.bottom
-            left: parent.left
-            right: parent.right
-            bottom: parent.bottom
-        }
-        orientation: Qt.Horizontal
-        model: 7
-        delegate: Rectangle{
-            color: Qt.rgba(1.0/(index+1),1.0/(index+1),1.0/(index+1),1.0)
-            height: listView.height
-            width: mainWindow.width/7
-        }
-
-    }
-
 }

@@ -207,7 +207,13 @@ void Database::readEventsFromRange(qint64 begin, qint64 end, EventsList &list) c
 {
     QSqlDatabase db = QSqlDatabase::database( MAIN_DB_CONNECTION );
     QSqlQuery query(db);
-    if(!query.exec( "SELECT * FROM events WHERE begin_time >= " + QString::number(begin) + " AND end_time <= " + QString::number(end) ))
+
+    /// preparing query is not required - data cannot be invalid
+    QString queryText = "SELECT * FROM events ";
+    queryText += "WHERE begin_time >= " + QString::number(begin);
+    queryText += " AND end_time <= " + QString::number(end);
+
+    if(!query.exec( queryText ))
     {
         W("Unable to execute SELECT query for events: " + query.lastError().text());
         return;
@@ -223,8 +229,6 @@ void Database::readEventsFromRange(qint64 begin, qint64 end, EventsList &list) c
         e.setDescription( Database::validatePath(r.value("path").toString()) );
         e.setBeginTime( r.value("begin_time").toULongLong() );
         e.setEndTime( r.value("end_time").toULongLong() );
-        // D("found " + QString::number(++i) + " value:")
-        e.print();
         list.append(e);
     }
 }
@@ -253,6 +257,7 @@ void Database::readWeekEvents()
         weekEvents->setEventsForDay(static_cast<Qt::DayOfWeek>(i+1), list);
     }
 
+    I("WeekEvents readed from the database")
 
 }
 

@@ -32,7 +32,8 @@ Item {
         // positive end
         function onInitialized(){
             // make main window visible and other stuff to init
-            mainWindow.show()
+            // mainWindow.showMaximized()
+            mainWindow.showNormal()
         }
     }
 

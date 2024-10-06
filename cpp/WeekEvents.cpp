@@ -44,7 +44,8 @@ QDate WeekEvents::getWeekDate(qint64 dayOffset) const
 
 QString WeekEvents::getCurrentWeek() const
 {
-    return m_currentWeek.toString("d M yyyy") + " - " + this->getWeekDate(6).toString("d M yyyy");
+    // return m_currentWeek.toString("d M yyyy") + " - " + this->getWeekDate(6).toString("d M yyyy");
+    return m_currentWeek.toString("d MMM yyyy") + " - " + this->getWeekDate(6).toString("d MMM yyyy");
 }
 
 const EventsMap &WeekEvents::getEvents() const

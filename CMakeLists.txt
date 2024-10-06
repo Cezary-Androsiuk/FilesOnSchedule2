@@ -29,6 +29,21 @@ qt_add_qml_module(appFilesOnSchedule2
         QML_FILES qml/Error3Window.qml
         SOURCES cpp/Event.h cpp/Event.cpp
         SOURCES cpp/WeekEvents.h cpp/WeekEvents.cpp
+        QML_FILES qml/MainContent.qml
+        QML_FILES qml/AddEvent.qml
+        QML_FILES qml/Settings.qml
+        QML_FILES qml/DayList.qml
+
+        RESOURCES icons/back.svg
+        RESOURCES icons/back_filled.svg
+        RESOURCES icons/forward.svg
+        RESOURCES icons/forward_filled.svg
+        RESOURCES icons/left.svg
+        RESOURCES icons/left_filled.svg
+        RESOURCES icons/plus_math.svg
+        RESOURCES icons/plus_math_filled.svg
+        RESOURCES icons/settings.svg
+        RESOURCES icons/settings_filled.svg
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
