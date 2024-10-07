@@ -61,6 +61,10 @@ Item {
                 icon.width: width * 0.35
                 onClicked: {
                     WeekEvents.prevWeek();
+
+                    // refresh loader
+                    scheduleLoader.sourceComponent = null
+                    scheduleLoader.sourceComponent = listViewComponent
                 }
             }
             Label {
@@ -83,6 +87,11 @@ Item {
                 icon.width: width * 0.35
                 onClicked: {
                     WeekEvents.nextWeek();
+
+                    // refresh loader
+                    scheduleLoader.sourceComponent = null
+                    scheduleLoader.sourceComponent = listViewComponent
+
                 }
             }
         }
@@ -104,33 +113,104 @@ Item {
         }
     }
 
-    ListView{
-        id: listView
+    Rectangle{
         anchors{
             top: toolBarHeader.bottom
             left: parent.left
             right: parent.right
             bottom: parent.bottom
         }
-        // interactive: false
-        orientation: Qt.Horizontal
-        model: 8
-        boundsBehavior: Flickable.StopAtBounds
-        clip: true
-        delegate: Rectangle{
-            color: Qt.rgba(1.0/8*(index),1.0/8*(index),1.0/8*(index),1.0)
-            height: listView.height
-            width: widthOfField(index)
+        color: Qt.rgba(0.2, 0.2, 0.2, 1.0)
 
-            DayList{
+        Item{
+            id: scheduleHeader
+            anchors{
+                top: parent.top
+                left: parent.left
+                leftMargin: labelsArea.width
+                right: parent.right
+            }
+            height: parent.height * 0.05
+
+            ListView{
                 anchors.fill: parent
-                day: index
+                orientation: Qt.Horizontal
+                interactive: false
+                clip: true
+                model: [
+                    {weekDay: "Monday"},
+                    {weekDay: "Tuesday"},
+                    {weekDay: "Wednesday"},
+                    {weekDay: "Thursday"},
+                    {weekDay: "Friday"},
+                    {weekDay: "Saturday"},
+                    {weekDay: "Sunday"},
+                ]
+
+                delegate: Item{
+                    width: scheduleHeader.width /7
+                    height: scheduleHeader.height
+                    Label{
+                        anchors.centerIn: parent
+                        text: modelData.weekDay
+                        horizontalAlignment: Qt.AlignHCenter
+                        verticalAlignment: Qt.AlignVCenter
+                        font.bold: true
+                    }
+                }
             }
 
-            // Text{
-            //     anchors.centerIn: parent
-            //     text: index
-            // }
         }
+
+        Item{
+            id: labelsArea
+            anchors{
+                top: scheduleHeader.bottom
+                left: parent.left
+                bottom: parent.bottom
+            }
+            width: parent.width / (7*3+1)
+        }
+
+        Loader{
+            id: scheduleLoader
+            anchors{
+                top: scheduleHeader.bottom
+                left: labelsArea.right
+                right: parent.right
+                bottom: parent.bottom
+            }
+
+            sourceComponent: listViewComponent
+        }
+
+        Component{
+            id: listViewComponent
+            ListView{
+                id: listView
+                interactive: false
+                orientation: Qt.Horizontal
+                model: 7
+                clip: true
+                delegate: Item{
+                    width: listView.width /7
+                    height: listView.height
+
+                    DayList{
+                        anchors.fill: parent
+                        dayDate: WeekEvents.getTextDate(index)
+
+                    }
+
+                    // Text{
+                    //     anchors.centerIn: parent
+                    //     text: index
+                    // }
+                }
+            }
+
+        }
+
     }
+
 }

@@ -42,6 +42,14 @@ QDate WeekEvents::getWeekDate(qint64 dayOffset) const
     return m_currentWeek.addDays(dayOffset);
 }
 
+QString WeekEvents::getTextDate(qint64 dayOffset) const
+{
+    if(dayOffset > 6) /// limit, read only from monday to sunday in currentWeek
+        dayOffset = 6;
+
+    return m_currentWeek.addDays(dayOffset).toString("dd-MM-yyyy");
+}
+
 QString WeekEvents::getCurrentWeek() const
 {
     // return m_currentWeek.toString("d M yyyy") + " - " + this->getWeekDate(6).toString("d M yyyy");

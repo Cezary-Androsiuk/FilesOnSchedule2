@@ -1,7 +1,8 @@
 import QtQuick 2.15
 import QtQuick.Layouts
-import QtQuick.Dialogs
 import QtQuick.Controls.Material
+
+import "components"
 
 Item {
     id: addEvent
@@ -47,51 +48,7 @@ Item {
                 Layout.fillWidth: true
             }
         }
-
-
     }
-
-    // property var elements: [
-    //     {"fieldName": "Title",          "fieldType": "textarea",    "value": ""},
-    //     {"fieldName": "Description",    "fieldType": "textarea",    "value": ""},
-    //     {"fieldName": "Path",           "fieldType": "selectpath",  "value": ""},
-    //     // {"fieldName": "Day",            "fieldType": "selectday"},
-    //     // {"fieldName": "From",           "fieldType": "selecttime"},
-    //     // {"fieldName": "To",             "fieldType": "selecttime"},
-    //     {"fieldName": "From",           "fieldType": "selectdate",  "value": ""},
-    //     {"fieldName": "To",             "fieldType": "selectdate",  "value": ""},
-    // ]
-
-    // // "title          TEXT        NOT NULL,"
-    // // "description    TEXT        NOT NULL,"
-    // // "path           TEXT        NOT NULL,"
-    // // "begin_time     INTEGER     NOT NULL,"
-    // // "end_time       INTEGER     NOT NULL,"
-
-    // ListView{
-    //     id: listView
-    //     anchors{
-    //         top: toolBarHeader.bottom
-    //         left: parent.left
-    //         right: parent.right
-    //         bottom: parent.bottom
-    //     }
-    //     // interactive: false
-    //     model: elements
-    //     boundsBehavior: Flickable.StopAtBounds
-    //     clip: true
-    //     delegate: Loader{
-    //         height: 30
-    //         width: listView.width
-
-    //         Text{
-    //             anchors.centerIn: parent
-    //             text: index
-    //         }
-
-    //     }
-
-    // }
 
     property string titleValue: ""
     property string descriptionValue: ""
@@ -125,10 +82,6 @@ Item {
                 top: parent.top
                 horizontalCenter: parent.horizontalCenter
             }
-            // Rectangle{
-            //     anchors.fill: parent
-            //     color: "red"
-            // }
 
             width: parent.width < 800 ? parent.width : 800
             height: parent.height
@@ -158,13 +111,14 @@ Item {
                 }
 
                 placeholderText: "Description"
+                text: descriptionValue
                 onTextChanged: {
                     descriptionValue = text
                 }
                 width: parent.width * 0.8
             }
 
-            Item{
+            SelectPathField{
                 id: selectPathField
                 anchors{
                     top: descriptionField.bottom
@@ -174,97 +128,10 @@ Item {
 
                 width: parent.width * 0.8
                 height: titleField.height * 1.2
-
-                FileDialog{
-                    id: fileDialog
-                    title: "Select File"
-
-                    onAccepted: {
-                        pathValue = fileDialog.selectedFile;
-                        pathValue = pathValue.replace("file:///", "")
-                        pathSelection = 1;
-                    }
-                }
-
-                FolderDialog{
-                    id: folderDialog
-                    title: "Select Folder"
-
-                    onAccepted: {
-                        pathValue = folderDialog.selectedFolder;
-                        pathValue = pathValue.replace("file:///", "")
-                        pathSelection = 2;
-                    }
-                }
-
-                TabButton{
-                    id: selectFileButton
-                    anchors{
-                        left: parent.left
-                        top: parent.top
-                        bottom: parent.bottom
-                    }
-                    width: height
-                    display: AbstractButton.IconOnly
-                    // icon.source: Qt.resolvedUrl("qrc:/FilesOnSchedule2/icons/file.svg")
-                    icon.source: Qt.resolvedUrl("qrc:/FilesOnSchedule2/icons/file_filled.svg")
-                    icon.height: height * 0.4
-                    icon.width: width * 0.4
-
-                    checkable: false
-                    checked: pathSelection == 1
-
-                    onClicked: {
-                        fileDialog.open()
-                    }
-                }
-
-                TabButton{
-                    id: selectFolderButton
-                    anchors{
-                        left: selectFileButton.right
-                        top: parent.top
-                        bottom: parent.bottom
-                    }
-                    width: height
-                    display: AbstractButton.IconOnly
-                    // icon.source: Qt.resolvedUrl("qrc:/FilesOnSchedule2/icons/opened_folder.svg")
-                    icon.source: Qt.resolvedUrl("qrc:/FilesOnSchedule2/icons/opened_folder_filled.svg")
-                    icon.height: height * 0.4
-                    icon.width: width * 0.4
-
-                    checkable: false
-                    checked: pathSelection == 2
-
-                    onClicked: {
-                        folderDialog.open();
-                    }
-                }
-
-                Label{
-                    id: pathLabel
-                    anchors{
-                        top: parent.top
-                        left: selectFolderButton.right
-                        leftMargin: selectFolderButton.width/3
-                        right: parent.right
-                        bottom: parent.bottom
-                    }
-
-                    // elide: Text.ElideRight
-                    wrapMode: Text.WrapAnywhere
-                    font.pixelSize: 16
-                    horizontalAlignment: Text.AlignLeft
-                    verticalAlignment: Text.AlignVCenter
-
-                    text: pathValue
-                }
-
-
             }
 
-            Item{
-                id: selectFrom
+            SelectDateTime{
+                id: selectFromDate
                 anchors{
                     top: selectPathField.bottom
                     horizontalCenter: parent.horizontalCenter
@@ -274,67 +141,17 @@ Item {
                 width: parent.width * 0.8
                 height: titleField.height
 
-
-                Label{
-                    id: fromLabel
-                    anchors{
-                        left: parent.left
-                        leftMargin: 8
-                        top: parent.top
-                        bottom: parent.bottom
-                    }
-
-                    text: "From"
-                    opacity: 0.7
-                    font.pixelSize: 26
-                    elide: Label.ElideRight
-                    horizontalAlignment: Qt.AlignHCenter
-                    verticalAlignment: Qt.AlignVCenter
-
-                }
-
-                Item{
-                    anchors{
-                        left: parent.left
-                        leftMargin: 100
-                        top: parent.top
-                        bottom: parent.bottom
-                    }
-                    width: parent.width /2
-
-                    TextField{
-                        id: fromFieldDate
-                        anchors{
-                            left: parent.left
-                            verticalCenter: parent.verticalCenter
-                        }
-                        width: parent.width * 3/5 - 10
-                        placeholderText: "DD-MM-YYYY"
-                        onTextChanged: {
-                            timeFrom = text
-                        }
-                    }
-
-                    TextField{
-                        id: fromFieldTime
-                        anchors{
-                            right: parent.right
-                            verticalCenter: parent.verticalCenter
-                        }
-                        width: parent.width * 2/5
-                        placeholderText: "HH:MM"
-                        onTextChanged: {
-                            timeTo = text
-                        }
-                    }
-                }
-
+                text: "From"
+                dateValue: dateFrom
+                onDateValueChanged: dateFrom = dateValue
+                timeValue: timeFrom
+                onTimeValueChanged: timeFrom = timeValue
             }
 
-            Item{
-                id: selectTo
+            SelectDateTime{
+                id: selectToDate
                 anchors{
-                    top: selectFrom.bottom
+                    top: selectFromDate.bottom
                     horizontalCenter: parent.horizontalCenter
                     topMargin: 30
                 }
@@ -343,66 +160,18 @@ Item {
                 height: titleField.height
 
 
-                Label{
-                    id: toLabel
-                    anchors{
-                        left: parent.left
-                        leftMargin: 8
-                        top: parent.top
-                        bottom: parent.bottom
-                    }
-
-                    text: "To"
-                    opacity: 0.7
-                    font.pixelSize: 26
-                    elide: Label.ElideRight
-                    horizontalAlignment: Qt.AlignHCenter
-                    verticalAlignment: Qt.AlignVCenter
-
-                }
-
-                Item{
-                    anchors{
-                        left: parent.left
-                        leftMargin: 100
-                        top: parent.top
-                        bottom: parent.bottom
-                    }
-                    width: parent.width /2
-
-                    TextField{
-                        id: toFieldDate
-                        anchors{
-                            left: parent.left
-                            verticalCenter: parent.verticalCenter
-                        }
-                        width: parent.width * 3/5 - 10
-                        placeholderText: "DD-MM-YYYY"
-                        onTextChanged: {
-                            dateFrom = text
-                        }
-                    }
-
-                    TextField{
-                        id: toFieldTime
-                        anchors{
-                            right: parent.right
-                            verticalCenter: parent.verticalCenter
-                        }
-                        width: parent.width * 2/5
-                        placeholderText: "HH:MM"
-                        onTextChanged: {
-                            dateTo = text
-                        }
-                    }
-                }
+                text: "To"
+                dateValue: dateTo
+                onDateValueChanged: dateTo = dateValue
+                timeValue: timeTo
+                onTimeValueChanged: timeTo = timeValue
 
             }
 
             Item{
                 id: submitArea
                 anchors{
-                    top: selectTo.bottom
+                    top: selectToDate.bottom
                     horizontalCenter: parent.horizontalCenter
                     topMargin: 30
                 }

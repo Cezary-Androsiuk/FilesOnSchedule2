@@ -48,6 +48,8 @@ qt_add_qml_module(appFilesOnSchedule2
         RESOURCES icons/file_filled.svg
         RESOURCES icons/opened_folder.svg
         RESOURCES icons/opened_folder_filled.svg
+        QML_FILES qml/components/SelectPathField.qml
+        QML_FILES qml/components/SelectDateTime.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

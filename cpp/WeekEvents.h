@@ -33,6 +33,7 @@ public:
     void setEventsForDay(Qt::DayOfWeek day, EventsList list);
 
     Q_INVOKABLE QDate getWeekDate(qint64 dayOffset = 0) const;
+    Q_INVOKABLE QString getTextDate(qint64 dayOffset = 0) const;
     QString getCurrentWeek() const;
     const EventsMap &getEvents() const;
 

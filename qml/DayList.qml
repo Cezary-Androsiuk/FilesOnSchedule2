@@ -4,7 +4,12 @@ import QtQuick.Controls.Material
 Item {
     id: dayList
 
-    required property int day;
+    required property var dayDate
+
+    function timeFromIndex(index){
+        var hour = index>9 ? index : ("0"+index)
+        return hour + ":00"
+    }
 
     ListView{
         id: listView
@@ -14,28 +19,25 @@ Item {
         boundsBehavior: Flickable.StopAtBounds
         clip: true
         delegate: Item{
-            Rectangle{
-                anchors{
-                    top: parent.top
-                    left: parent.left
-                    right: parent.right
-                }
-                height: 1
-                color: Qt.rgba(1.0/24*(index),1.0/24*(index),1.0/24*(index),1.0)
-            }
-
             height: listView.height / 24
             width: listView.width
 
-            Text{
+            Label{
                 anchors.centerIn: parent
-                text: day + "-" + index
+                text: dayDate + " " + timeFromIndex(index)
             }
 
             MouseArea{
                 anchors.fill: parent
                 onClicked:{
-                    mainStackView.push(Qt.resolvedUrl("AddEvent.qml"), {"titleValue": "1234"})
+                    mainStackView.push(
+                                Qt.resolvedUrl("AddEvent.qml"),
+                                {
+                                    "dateFrom": dayDate,
+                                    "timeFrom": timeFromIndex(index),
+                                    "dateTo": dayDate,
+                                    "timeTo": timeFromIndex(index+1),
+                                })
                 }
             }
         }
